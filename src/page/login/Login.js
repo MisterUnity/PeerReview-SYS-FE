@@ -5,7 +5,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faKey } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { useGlobalStore } from "../../global/GlobalStoreContext";
-import { SendEmail } from "../../api/email/Email";
 import "../../styles/scss/page/_login.scss";
 
 const inputReducer = (state, action) => {
@@ -71,7 +70,6 @@ const Login = () => {
 
   return (
     <div className="bg-container">
-      <Button label="test" onClick={() => SendEmail()} />
       <div className="login-container">
         <div className="login-container-title">Backend System</div>
         <div className="sub-container">
