@@ -11,7 +11,12 @@ import { ProgressSpinner } from "primereact/progressspinner";
 import "../../styles/scss/page/_review-details.scss";
 
 const ReviewDetails = (props) => {
-  const { evalItemNameContext, showToast } = useGlobalStore();
+  const {
+    evalItemNameContext,
+    evaluatedEmployeeNameContext,
+    loggedInEmployeeIdContext,
+    showToast,
+  } = useGlobalStore();
   const [blocked, setBlocked] = useState(false);
   const [Item1, setItem1] = useState("");
   const [Item2, setItem2] = useState("");
@@ -35,7 +40,29 @@ const ReviewDetails = (props) => {
       setBlocked(false);
       return;
     }
-    SetEvaluation([[Item1, Item2, selectedItem1, selectedItem2, textAreaValue]])
+    const currentDate = new Date();
+
+    const year = currentDate.getFullYear();
+    const month = currentDate.getMonth() + 1;
+    const day = currentDate.getDate();
+    const hours = currentDate.getHours();
+    const minutes = currentDate.getMinutes();
+    const seconds = currentDate.getSeconds();
+
+    const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+
+    SetEvaluation([
+      [
+        formattedDateTime,
+        loggedInEmployeeIdContext.loggedInEmployeeID,
+        evaluatedEmployeeNameContext.evaluatedEmployeeName,
+        Item1,
+        Item2,
+        selectedItem1,
+        selectedItem2,
+        textAreaValue,
+      ],
+    ])
       .then((res) => {
         if (res.result.status == 200) {
           navigate("/submits-status");

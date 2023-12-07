@@ -1,5 +1,6 @@
+const post = process.env.REACT_APP_POST;
 export const SendEmail = (emailAddress) => {
-  fetch(`http://localhost:3001/email/send-email`, {
+  fetch(`${post}email/send-email`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

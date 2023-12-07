@@ -63,7 +63,6 @@ const Login = () => {
   function loginHandler() {
     if (userName !== "Godfrey" || userPassword !== "123") {
       setErrorMsgView(true);
-      SendEmail();
     } else {
       loggedInEmployeeIdContext.setLoggedInEmployeeID(userName);
       navigate("/colleague-feedback");
@@ -72,6 +71,7 @@ const Login = () => {
 
   return (
     <div className="bg-container">
+      <Button label="test" onClick={() => SendEmail()} />
       <div className="login-container">
         <div className="login-container-title">Backend System</div>
         <div className="sub-container">
