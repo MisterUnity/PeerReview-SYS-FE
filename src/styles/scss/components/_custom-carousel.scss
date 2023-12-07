@@ -1,0 +1,28 @@
+// 浮起來的陰影效果
+$box-shadow-hover: 2px 0px 10px rgba(0, 0, 0, 1);
+$box-shadow-active: 2px 0px 10px rgba(246, 9, 84, 1);
+
+// 定義混入
+@mixin floating-effect {
+  transition: box-shadow 0.3s ease;
+  &:hover {
+    cursor: pointer;
+    box-shadow: $box-shadow-hover;
+  }
+}
+
+.item-template {
+  margin: 0.5rem;
+  height: 95%;
+  width: 95%;
+  border-radius: 5%;
+  @include floating-effect;
+}
+.focus {
+  box-shadow: $box-shadow-active;
+}
+.item-template.focus {
+  &:hover {
+    box-shadow: $box-shadow-active;
+  }
+}

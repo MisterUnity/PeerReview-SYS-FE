@@ -1,0 +1,80 @@
+$margin: 0.5rem;
+$gradient-start: #f8efef;
+$gradient-end: rgba(225, 234, 238, 0.87);
+$minWidth: 767px; // md:767px lg:991px
+
+.bg-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url("../../../assets/image/login/login_bg.jpg") center/cover;
+  .login-container {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 25%;
+    height: 60%;
+    border-radius: 5%;
+    border: 2px solid rgb(144, 138, 138);
+    animation: appear 1.5s ease-out forwards;
+    box-shadow: 4px 4px 50px rgb(0, 0, 0);
+    background: linear-gradient(
+      to bottom right,
+      $gradient-start,
+      $gradient-end
+    );
+    .sub-container {
+      width: 90%;
+      height: 15%;
+      .icon-container,
+      .input-container {
+        height: 50%;
+        margin: $margin - 0.3;
+        margin-left: 17%;
+        .id,
+        .pwd {
+          width: 80%;
+          height: 100%;
+        }
+      }
+      .button {
+        left: 50%;
+        transform: translate(-50%);
+        width: 65%;
+        height: 100%;
+      }
+    }
+  }
+}
+.login-container-title {
+  font-size: 1.5rem;
+}
+
+.sub-container-title {
+  margin-left: 0.5rem;
+}
+.error-MSG {
+  font-size: 1rem;
+  color: red;
+  opacity: 80%;
+}
+@keyframes appear {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@media (max-width: $minWidth) {
+  .button {
+    height: 50%;
+  }
+}

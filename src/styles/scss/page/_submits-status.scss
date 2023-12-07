@@ -1,0 +1,50 @@
+$minWidth: 767px; // md:767px lg:991px
+$margin: 0.5rem;
+
+.submits-status-bg {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: url("../../../assets/image/staff_dashboard/staff_dashboard_bg.jpg")
+    center/cover;
+  .submits-status-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 30%;
+    height: 80%;
+    border-radius: 2%;
+    background: linear-gradient(to right, rgb(215, 240, 250), white 95%),
+      linear-gradient(to left, rgb(210, 205, 230), white 95%);
+    background-size: 50% 100%; /* 控制每個漸變的大小，此處設置為一半寬度 */
+    background-position: left, right; /* 控制每個漸變的位置 */
+    background-repeat: no-repeat; /* 防止漸變重複 */
+    box-shadow: 8px 8px 20px rgb(0, 0, 0);
+    animation: fadeIn 0.8s ease-in-out;
+    .submits-status-logo {
+      height: 25%;
+    }
+    .submits-status-MSG {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin: 1rem;
+    }
+    .submits-status-btn {
+      top: 10%;
+      padding: 1rem;
+    }
+  }
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

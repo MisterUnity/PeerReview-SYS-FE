@@ -1,0 +1,13 @@
+// 容器高度問題修復。
+.custom-carousel {
+  height: 100%;
+  .p-carousel-content {
+    height: 100%;
+    .p-carousel-container {
+      height: 100%;
+      .p-carousel-items-container {
+        height: 100%;
+      }
+    }
+  }
+}

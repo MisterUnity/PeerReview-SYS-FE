@@ -1,0 +1,12 @@
+$background-color: red;
+$background: url("../../../../assets/image/profile/profile_bg_grid.jpg")
+  center/cover;
+.p-dialog-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: $background;
+}
+.p-dialog-header {
+  background: $background;
+}

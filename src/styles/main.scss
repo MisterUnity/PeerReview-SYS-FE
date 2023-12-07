@@ -1,0 +1,20 @@
+// base
+@import "./scss/base/reset";
+
+// page
+@import "./scss/page/login"; // ★ Login
+@import "./scss/page/error"; // ★ Error
+@import "./scss/page/colleague-feedback"; // ★ colleague-feedback
+@import "./scss/page/review-details"; // ★ review-details
+@import "./scss/page/submits-status"; // ★ submits-status
+
+// components
+@import "./scss/components/bulletin-board"; // ★ bulletin-board
+@import "./scss/components/personal-data"; // ★ personal-data
+@import "./scss/components/custom-carousel"; // ★ custom-carousel
+@import "./scss/components/custom-dialog-internal"; // ★ custom-dialog-internal
+
+// vendors-primereact
+@import "./scss/vendors/primereact/carousel"; // ★ carousel-primereact
+@import "./scss/vendors/primereact/dialog"; // ★ dialog-primereact
+@import "./scss/vendors/primereact/dropdown"; // ★ dropdown-primereact

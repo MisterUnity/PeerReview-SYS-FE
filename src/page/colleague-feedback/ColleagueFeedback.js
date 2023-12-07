@@ -1,0 +1,227 @@
+import { useState, useEffect } from "react";
+import { Button } from "primereact/button";
+import { useNavigate } from "react-router-dom";
+import { Dropdown } from "primereact/dropdown";
+import { useGlobalStore } from "../../global/GlobalStoreContext";
+import { GetSpreadsheet } from "../../api/spreadsheets/Spreadsheets";
+import CustomCarousel from "../../components/carousel/CustomCarousel";
+import BulletinBoard from "../../components/bulletin-board/BulletinBoard";
+import PersonalData from "../../components/personal-data/PersonalData";
+import CustomDialog from "../../components/dialog/CustomDialog";
+import john_doe_picture from "../../assets/image/profile/staff_headshot/headshot-3.png";
+import jane_smith_picture from "../../assets/image/profile/staff_headshot/headshot-1.png";
+import bob_ohnson_picture from "../../assets/image/profile/staff_headshot/headshot-6.png";
+import alice_williams_picture from "../../assets/image/profile/staff_headshot/headshot-2.png";
+import charlie_brown_picture from "../../assets/image/profile/staff_headshot/headshot-4.png";
+import eva_davis_picture from "../../assets/image/profile/staff_headshot/headshot-5.png";
+import "../../styles/scss/page/_colleague-feedback.scss";
+import "../../styles/scss/components/_custom-dialog-internal.scss";
+
+const employeePictures = {
+  "John Doe": john_doe_picture,
+  "Jane Smith": jane_smith_picture,
+  "Bob Johnson": bob_ohnson_picture,
+  "Alice Williams": alice_williams_picture,
+  "Charlie Brown": charlie_brown_picture,
+  "Eva Davis": eva_davis_picture,
+};
+const evalItems = [
+  { itemName: "協力能力", code: "Collaboration" },
+  { itemName: "業務効率", code: "Work Efficiency" },
+  { itemName: "専門知識", code: "Professional Knowledge" },
+  { itemName: "責任感", code: "Responsibility" },
+  { itemName: "問題解決能力", code: "Problem Solving" },
+  { itemName: "チームワーク", code: "Teamwork" },
+  { itemName: "適応力", code: "Adaptability" },
+  { itemName: "仕事の態度", code: "Work Attitude" },
+  { itemName: "学びの姿勢", code: "Learning Attitude" },
+];
+const evalItemsDescription = [
+  {
+    evalItem: "協力能力",
+    description: "チームでの協力とコミュニケーション能力。",
+  },
+  { evalItem: "業務効率", description: "タスクのスピードと効率。" },
+  { evalItem: "専門知識", description: "自身の専門領域の知識水準。" },
+  { evalItem: "責任感", description: "仕事への責任感。" },
+  { evalItem: "問題解決能力", description: "問題解決能力と創造的思考。" },
+  { evalItem: "チームワーク", description: "チームでの協力と協働。" },
+  { evalItem: "適応力", description: "変化への適応力と柔軟性。" },
+  {
+    evalItem: "仕事の態度",
+    description: "仕事に対する前向きな態度とプロ意識。",
+  },
+  { evalItem: "学びの姿勢", description: "新しい知識とスキルへの学びの姿勢。" },
+];
+
+const ColleagueFeedback = () => {
+  const [clickedData, setClickedData] = useState({});
+  const [employeeData, setEmployeeData] = useState([]);
+  const [steps, setSteps] = useState(0);
+  const [selectedItem, setSelectedItem] = useState(evalItems[0]);
+  const [evalItemDescription, setEvalItemsDescription] = useState(
+    evalItemsDescription[0]["description"]
+  );
+  const [isDialogVisible, setIsDialogVisible] = useState(false);
+  const { evalItemNameContext, evaluatedEmployeeNameContext, showToast } =
+    useGlobalStore();
+  const navigate = useNavigate();
+  useEffect(() => {
+    getEmployeeListInit();
+  }, []);
+  useEffect(() => {
+    if (selectedItem) {
+      evalItemNameContext.setEvalItemName(selectedItem["itemName"]);
+
+      // Switch Description Content Based on Dropdown Selection"
+      const matchedDescription = evalItemsDescription.find(
+        (evalItems) => evalItems.evalItem === selectedItem["itemName"]
+      );
+      setEvalItemsDescription(matchedDescription["description"]);
+    }
+  }, [selectedItem]);
+
+  async function getEmployeeListInit() {
+    const rangeEmployeeList = "employeeList";
+    await GetSpreadsheet(rangeEmployeeList)
+      .then((res) => {
+        const { values } = res.result.data;
+
+        const arrEmployeeList = values
+          .map((row, rowIndex) => {
+            // Skip the first entry; the first entry is just the header
+            if (rowIndex !== 0) {
+              let tempObj = {
+                index: rowIndex - 1,
+                id: row[0],
+                name: row[1],
+                position: row[2],
+                popularity: row[3],
+                email: row[4],
+                manager: row[5],
+              };
+              return tempObj;
+            }
+            return null; // Skip the header
+          })
+          .filter((obj) => obj !== null); // Remove null entries (header)
+
+        /* Add a new property for the pictures and match 
+          the corresponding photos based on the names. */
+        const arrNewEmployeeList = arrEmployeeList.map((employee) => {
+          const { name } = employee;
+          const picture = employeePictures[name];
+          return { ...employee, picture };
+        });
+        setEmployeeData(arrNewEmployeeList);
+      })
+      .catch((err) => {
+        showToast("Error", "There was an issue getting the employee list.", 0);
+        console.log({ err });
+      });
+  }
+
+  function getStaffInfoHandler(staffIndex) {
+    evaluatedEmployeeNameContext.setEvaluatedEmployeeName(
+      employeeData[staffIndex]["name"]
+    );
+    setClickedData(employeeData[staffIndex]);
+    setIsDialogVisible(true);
+  }
+
+  function dialogVisibleHandler() {
+    setIsDialogVisible(false);
+
+    // Initialize Dropdown Menu and Evaluation Description
+    setSelectedItem(evalItems[0]);
+    setEvalItemsDescription(evalItemsDescription[0]["description"]);
+
+    // Initialize Dialog Display Content"
+    setSteps(0);
+  }
+
+  function stepsHandler() {
+    setSteps((prev) => {
+      // Toggle Dialog Display Content
+      // 1：staffConfirmation
+      // 0：evalItemConfirmation
+      return prev === 0 ? 1 : 0;
+    });
+  }
+
+  const staffConfirmation = (
+    <div className="staff-confirmation">
+      <PersonalData employeeData={clickedData} />
+      <div className="staff-confirmation-internal-bottom-Section">
+        <Button
+          label="Positive Review"
+          className="bottom-section-btn"
+          onClick={() => stepsHandler(1)}
+        />
+      </div>
+    </div>
+  );
+
+  const evalItemConfirmation = (
+    <div className="eval-item-confirmation">
+      <div className="eval-item-confirmation-top-section">
+        <span className="eval-item-title">評価項目：</span>
+        <Dropdown
+          className="eval-item-dropdown"
+          value={selectedItem}
+          onChange={(e) => setSelectedItem(e.value)}
+          options={evalItems}
+          optionLabel="itemName"
+          placeholder="協力能力"
+        />
+        <div className="eval-item-description">{evalItemDescription}</div>
+      </div>
+      <div className="eval-item-confirmation-bottom-Section">
+        <Button
+          label="Back"
+          className="bottom-section-btn-e"
+          onClick={() => stepsHandler(0)}
+        />
+        <Button
+          label="Fill in the details"
+          className="bottom-section-btn-e"
+          onClick={() => navigate("/review-details")}
+        />
+      </div>
+    </div>
+  );
+
+  return (
+    <div className="colleague-feedback-bg">
+      <span className="sign-out">
+        <Button
+          className="sign-out-btn"
+          size="large"
+          label="Sign Out"
+          onClick={() => navigate("/")}
+        />
+      </span>
+      <div className="colleague-feedback-container">
+        <div className="bulletin-board-container">
+          <BulletinBoard />
+        </div>
+        <div className="staff-list-container">
+          <CustomCarousel
+            employeeData={employeeData}
+            onGetStaffIndex={getStaffInfoHandler}
+          />
+          <CustomDialog
+            visible={isDialogVisible}
+            onHide={dialogVisibleHandler}
+            style={{
+              width: "25vw",
+            }}
+          >
+            {steps === 0 ? staffConfirmation : evalItemConfirmation}
+          </CustomDialog>
+        </div>
+      </div>
+    </div>
+  );
+};
+export default ColleagueFeedback;
