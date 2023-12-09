@@ -1,6 +1,6 @@
 import { GetSpreadsheet } from "../../api/spreadsheets/Spreadsheets";
-const post = process.env.REACT_APP_POST;
 
+const post = process.env.REACT_APP_API_BASE_URL;
 // Spreadsheet ID.
 const sheetID = "1WvnyaR9E9Aefab02Bwnx5rs-1FGPfSjBcFs8Xbd2P1Y";
 
@@ -11,12 +11,24 @@ export const SetEvaluation = async (data) => {
   // Retrieve the current location of the existing data.
   const range = await GetSpreadsheet(rangeEvaluationList)
     .then((res) => {
-      const { values } = res.result.data;
-      return values.length;
+      try {
+        const { values } = res.result.data;
+        return values.length;
+      } catch (error) {
+        throw error;
+      }
     })
-    .catch((err) => {
-      throw err;
+    .catch((error) => {
+      throw error.json();
     });
+
+  // 無法取得存入資料的起始儲存格位置。
+  // Unable to obtain the starting cell position for storing data.
+  if (isNaN(range)) {
+    throw new Error(
+      "Unable to obtain the starting cell position for storing data."
+    );
+  }
   // Submit the new data to be filled in.
   return fetch(`${post}sheet/updatedata`, {
     method: "PUT",
@@ -31,7 +43,7 @@ export const SetEvaluation = async (data) => {
     .then((res) => {
       return res.json();
     })
-    .catch((err) => {
-      throw err;
+    .catch((error) => {
+      throw error.json();
     });
 };

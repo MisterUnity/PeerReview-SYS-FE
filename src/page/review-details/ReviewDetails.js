@@ -8,6 +8,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { SetEvaluation } from "../../api/evaluation/evaluationList";
 import { BlockUI } from "primereact/blockui";
 import { ProgressSpinner } from "primereact/progressspinner";
+import SubmitsStatus from "../../page/submits-status/SubmitsStatus";
 import "../../styles/scss/page/_review-details.scss";
 
 const ReviewDetails = (props) => {
@@ -33,6 +34,7 @@ const ReviewDetails = (props) => {
       { itemName: "dropdown-1", data: selectedItem1 },
       { itemName: "dropdown-2", data: selectedItem2 },
     ];
+    // 確保欄位不為空
     // Empty Item Handling
     const problematicItem = pendingDataSubmission.find((item) => !item.data);
     if (problematicItem) {
@@ -40,17 +42,16 @@ const ReviewDetails = (props) => {
       setBlocked(false);
       return;
     }
+    // 創建資料時間。
+    // Creation timestamp.
     const currentDate = new Date();
-
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
     const day = currentDate.getDate();
     const hours = currentDate.getHours();
     const minutes = currentDate.getMinutes();
     const seconds = currentDate.getSeconds();
-
     const formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-
     SetEvaluation([
       [
         formattedDateTime,
@@ -64,14 +65,19 @@ const ReviewDetails = (props) => {
       ],
     ])
       .then((res) => {
-        if (res.result.status == 200) {
-          navigate("/submits-status");
+        try {
+          if (res.result.status == 200) {
+            navigate("/submits-status");
+          }
+        } catch (error) {
+          showToast("Error", `${error}`, 0);
+        } finally {
+          setBlocked(false);
         }
       })
-      .catch((err) => {
+      .catch((error) => {
         setBlocked(false);
         showToast("Error", `An error occurred when submitting the form.`, 3);
-        console.log({ err });
       });
   }
   return (

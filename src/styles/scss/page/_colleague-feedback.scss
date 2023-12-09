@@ -43,6 +43,13 @@ $margin: 0.5rem;
       margin: $margin;
       animation: fadeIn 1.8s ease-in-out;
       animation-delay: -0.2s;
+      position: relative;
+      .staff-list-progressSpinner {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
   }
 }

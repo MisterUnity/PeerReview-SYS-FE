@@ -1,4 +1,4 @@
-const post = process.env.REACT_APP_POST;
+const post = process.env.REACT_APP_API_BASE_URL;
 export const SendEmail = (emailAddress) => {
   fetch(`${post}email/send-email`, {
     method: "POST",
@@ -11,7 +11,7 @@ export const SendEmail = (emailAddress) => {
       //   return res.json();
       console.log(res.json());
     })
-    .catch((err) => {
-      throw err;
+    .catch((error) => {
+      throw error.json();
     });
 };

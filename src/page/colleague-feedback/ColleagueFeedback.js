@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Dropdown } from "primereact/dropdown";
 import { useGlobalStore } from "../../global/GlobalStoreContext";
 import { GetSpreadsheet } from "../../api/spreadsheets/Spreadsheets";
+import { ProgressSpinner } from "primereact/progressspinner";
 import CustomCarousel from "../../components/carousel/CustomCarousel";
 import BulletinBoard from "../../components/bulletin-board/BulletinBoard";
 import PersonalData from "../../components/personal-data/PersonalData";
@@ -56,7 +57,7 @@ const evalItemsDescription = [
 
 const ColleagueFeedback = () => {
   const [clickedData, setClickedData] = useState({});
-  const [employeeData, setEmployeeData] = useState([]);
+  const [employeeData, setEmployeeData] = useState(null);
   const [steps, setSteps] = useState(0);
   const [selectedItem, setSelectedItem] = useState(evalItems[0]);
   const [evalItemDescription, setEvalItemsDescription] = useState(
@@ -69,6 +70,7 @@ const ColleagueFeedback = () => {
   useEffect(() => {
     getEmployeeListInit();
   }, []);
+
   useEffect(() => {
     if (selectedItem) {
       evalItemNameContext.setEvalItemName(selectedItem["itemName"]);
@@ -83,41 +85,117 @@ const ColleagueFeedback = () => {
 
   async function getEmployeeListInit() {
     const rangeEmployeeList = "employeeList";
-    await GetSpreadsheet(rangeEmployeeList)
+    const rangeEvaluationList = "evaluationList";
+    const objArrEmployeeList = await GetSpreadsheet(rangeEmployeeList)
       .then((res) => {
-        const { values } = res.result.data;
+        try {
+          /* status = 0。
+          API發送成功，但找不到指定之試算表。
+          API request was successful, 
+          but the specified spreadsheet could not be found.*/
+          if (res.status === 0) {
+            showToast(
+              "Error",
+              `Unable to retrieve data from the specified spreadsheet.`,
+              0
+            );
+            return;
+          }
 
-        const arrEmployeeList = values
-          .map((row, rowIndex) => {
-            // Skip the first entry; the first entry is just the header
-            if (rowIndex !== 0) {
-              let tempObj = {
-                index: rowIndex - 1,
-                id: row[0],
-                name: row[1],
-                position: row[2],
-                popularity: row[3],
-                email: row[4],
-                manager: row[5],
-              };
-              return tempObj;
-            }
-            return null; // Skip the header
-          })
-          .filter((obj) => obj !== null); // Remove null entries (header)
-
-        /* Add a new property for the pictures and match 
-          the corresponding photos based on the names. */
-        const arrNewEmployeeList = arrEmployeeList.map((employee) => {
-          const { name } = employee;
-          const picture = employeePictures[name];
-          return { ...employee, picture };
-        });
-        setEmployeeData(arrNewEmployeeList);
+          const { values } = res.result.data;
+          return values
+            .map((row, rowIndex) => {
+              // Skip the first entry; the first entry is just the header
+              if (rowIndex !== 0) {
+                let tempObj = {
+                  id: row[0],
+                  name: row[1],
+                  position: row[2],
+                  popularity: row[3],
+                  email: row[4],
+                  manager: row[5],
+                };
+                return tempObj;
+              }
+              return null; // Skip the header
+            })
+            .filter((obj) => obj !== null); // Remove null entries (header)
+        } catch (error) {
+          showToast("Error：", `${error}`, 0);
+        }
       })
-      .catch((err) => {
-        showToast("Error", "There was an issue getting the employee list.", 0);
-        console.log({ err });
+      .catch((error) => {
+        showToast("Error", `${error}`, 0);
+        //TODO 顯示dialog 獲取資料失敗，重新嘗試獲取資料的按鈕。
+      });
+
+    // 成功取得資料，但資料庫的員工清單為空。
+    // Successfully obtained data, but the employee list in the database is empty.
+    if (objArrEmployeeList.length < 1) {
+      showToast(
+        "Error",
+        "The employee list in the database is empty. Please contact the relevant personnel for assistance.",
+        0
+      );
+      return;
+    }
+    const arrEmployeeNameList = objArrEmployeeList.map((item) => item["name"]);
+    await GetSpreadsheet(rangeEvaluationList)
+      .then((res) => {
+        try {
+          const { values } = res.result.data;
+
+          // 根據有被評價的員工姓名，找出該員工的詳細資料物件。
+          /* Based on the evaluated employee's name, 
+           locate the detailed information object for that employee.*/
+          values.forEach((row) => {
+            row.forEach((element) => {
+              if (arrEmployeeNameList.includes(element)) {
+                let foundObject = objArrEmployeeList.find(
+                  (obj) => obj.name === element
+                );
+                // 增加該員工人氣度1點
+                // Increase the popularity of that employee by 1 point.
+                if (foundObject) {
+                  const intPopularity = parseInt(foundObject["popularity"]);
+                  const strPopularity = !isNaN(intPopularity)
+                    ? (intPopularity + 1).toString()
+                    : "0";
+                  foundObject["popularity"] = strPopularity;
+                }
+              }
+            });
+          });
+
+          // 新增一個圖片屬性，並根據名稱匹配相應的照片。
+          /* Add a new property for the pictures and match 
+          the corresponding photos based on the names. */
+          const objArrNewEmployeeList = objArrEmployeeList.map((employee) => {
+            const { name } = employee;
+            const picture = employeePictures[name];
+            return { ...employee, picture };
+          });
+
+          // 根據人氣度做排序處理（由高到低）
+          // Sort processing based on popularity (from high to low).
+          const objArrFinalResult = objArrNewEmployeeList.sort((a, b) => {
+            const popularityA = parseInt(a.popularity);
+            const popularityB = parseInt(b.popularity);
+            return popularityB - popularityA;
+          });
+
+          // 追加物件index。
+          // Additional object index
+          objArrFinalResult.forEach((employee, index) => {
+            employee["index"] = index;
+          });
+          setEmployeeData(objArrFinalResult);
+        } catch (error) {
+          showToast("Error", `${error}`, 0);
+        }
+      })
+      .catch((error) => {
+        showToast("Error", `${error}`, 0);
       });
   }
 
@@ -206,10 +284,14 @@ const ColleagueFeedback = () => {
           <BulletinBoard />
         </div>
         <div className="staff-list-container">
-          <CustomCarousel
-            employeeData={employeeData}
-            onGetStaffIndex={getStaffInfoHandler}
-          />
+          {employeeData ? (
+            <CustomCarousel
+              employeeData={employeeData}
+              onGetStaffIndex={getStaffInfoHandler}
+            />
+          ) : (
+            <ProgressSpinner className="staff-list-progressSpinner" />
+          )}
           <CustomDialog
             visible={isDialogVisible}
             onHide={dialogVisibleHandler}

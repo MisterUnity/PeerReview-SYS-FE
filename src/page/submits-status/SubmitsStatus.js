@@ -7,7 +7,6 @@ import "../../styles/scss/page/_submits-status.scss";
 
 const SubmitsStatus = (props) => {
   const { evaluatedEmployeeNameContext } = useGlobalStore();
-
   const navigate = useNavigate();
 
   return (
