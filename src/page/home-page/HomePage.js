@@ -15,7 +15,7 @@ import bob_ohnson_picture from "../../assets/image/profile/staff_headshot/headsh
 import alice_williams_picture from "../../assets/image/profile/staff_headshot/headshot-2.png";
 import charlie_brown_picture from "../../assets/image/profile/staff_headshot/headshot-4.png";
 import eva_davis_picture from "../../assets/image/profile/staff_headshot/headshot-5.png";
-import "../../styles/scss/page/_colleague-feedback.scss";
+import "../../styles/scss/page/_home-page.scss";
 import "../../styles/scss/components/_custom-dialog-internal.scss";
 
 const employeePictures = {
@@ -55,7 +55,7 @@ const evalItemsDescription = [
   { evalItem: "学びの姿勢", description: "新しい知識とスキルへの学びの姿勢。" },
 ];
 
-const ColleagueFeedback = () => {
+const HomePage = () => {
   const [clickedData, setClickedData] = useState({});
   const [employeeData, setEmployeeData] = useState(null);
   const [steps, setSteps] = useState(0);
@@ -270,7 +270,7 @@ const ColleagueFeedback = () => {
   );
 
   return (
-    <div className="colleague-feedback-bg">
+    <div className="home-page-bg">
       <span className="sign-out">
         <Button
           className="sign-out-btn"
@@ -279,7 +279,7 @@ const ColleagueFeedback = () => {
           onClick={() => navigate("/")}
         />
       </span>
-      <div className="colleague-feedback-container">
+      <div className="home-page-container">
         <div className="bulletin-board-container">
           <BulletinBoard />
         </div>
@@ -306,4 +306,4 @@ const ColleagueFeedback = () => {
     </div>
   );
 };
-export default ColleagueFeedback;
+export default HomePage;

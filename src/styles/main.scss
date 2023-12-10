@@ -4,7 +4,7 @@
 // page
 @import "./scss/page/login"; // ★ Login
 @import "./scss/page/error"; // ★ Error
-@import "./scss/page/colleague-feedback"; // ★ colleague-feedback
+@import "./scss/page/home-page"; // ★ home-page
 @import "./scss/page/review-details"; // ★ review-details
 @import "./scss/page/submits-status"; // ★ submits-status
 
@@ -15,6 +15,7 @@
 @import "./scss/components/custom-dialog-internal"; // ★ custom-dialog-internal
 
 // vendors-primereact
-@import "./scss/vendors/primereact/carousel"; // ★ carousel-primereact
-@import "./scss/vendors/primereact/dialog"; // ★ dialog-primereact
-@import "./scss/vendors/primereact/dropdown"; // ★ dropdown-primereact
+@import "./scss/vendors/primereact/carousel"; // ★ Carousel-primereact
+@import "./scss/vendors/primereact/dialog"; // ★ Dialog-primereact
+@import "./scss/vendors/primereact/dropdown"; // ★ Dropdown-primereact
+@import "./scss/vendors/primereact/rating"; // ★ Rating-primereact

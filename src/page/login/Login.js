@@ -64,7 +64,7 @@ const Login = () => {
       setErrorMsgView(true);
     } else {
       loggedInEmployeeIdContext.setLoggedInEmployeeID(userName);
-      navigate("/colleague-feedback");
+      navigate("/home-page");
     }
   }
 

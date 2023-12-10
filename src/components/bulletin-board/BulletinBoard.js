@@ -11,7 +11,7 @@ const slogan_En = (
     Spread the praise, advance as a team. Our strength comes from mutual care.
   </h3>
 );
-const btnSlogan = "ポジティブなエネルギーはここから始まります";
+const btnSlogan = <h2>ポジティブなエネルギーはここから始まります</h2>;
 
 const BulletinBoard = (props) => {
   return (

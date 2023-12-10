@@ -8,6 +8,7 @@ import { InputTextarea } from "primereact/inputtextarea";
 import { SetEvaluation } from "../../api/evaluation/evaluationList";
 import { BlockUI } from "primereact/blockui";
 import { ProgressSpinner } from "primereact/progressspinner";
+import { Rating } from "primereact/rating";
 import SubmitsStatus from "../../page/submits-status/SubmitsStatus";
 import "../../styles/scss/page/_review-details.scss";
 
@@ -19,7 +20,7 @@ const ReviewDetails = (props) => {
     showToast,
   } = useGlobalStore();
   const [blocked, setBlocked] = useState(false);
-  const [Item1, setItem1] = useState("");
+  const [Star, setStar] = useState("1");
   const [Item2, setItem2] = useState("");
   const [selectedItem1, setSelectedItem1] = useState("null");
   const [selectedItem2, setSelectedItem2] = useState("null");
@@ -29,8 +30,8 @@ const ReviewDetails = (props) => {
   async function submitsHandler() {
     setBlocked(true);
     const pendingDataSubmission = [
-      { itemName: "Item-1", data: Item1 },
-      { itemName: "Item-2", data: Item2 },
+      { itemName: "星", data: Star },
+      { itemName: "星に対する理由", data: Item2 },
       { itemName: "dropdown-1", data: selectedItem1 },
       { itemName: "dropdown-2", data: selectedItem2 },
     ];
@@ -38,7 +39,7 @@ const ReviewDetails = (props) => {
     // Empty Item Handling
     const problematicItem = pendingDataSubmission.find((item) => !item.data);
     if (problematicItem) {
-      showToast("警告", `${problematicItem["itemName"]}空白にできません`, 3);
+      showToast("警告", `${problematicItem["itemName"]}欄には空欄不可`, 3);
       setBlocked(false);
       return;
     }
@@ -57,7 +58,7 @@ const ReviewDetails = (props) => {
         formattedDateTime,
         loggedInEmployeeIdContext.loggedInEmployeeID,
         evaluatedEmployeeNameContext.evaluatedEmployeeName,
-        Item1,
+        Star,
         Item2,
         selectedItem1,
         selectedItem2,
@@ -88,18 +89,16 @@ const ReviewDetails = (props) => {
         ) : (
           <div className="review-details-container">
             <h1>{evalItemNameContext.evalItemName}</h1>
-            <InputText
-              className="review-details-title"
-              value={Item1}
-              onChange={(e) => setItem1(e.target.value)}
-              placeholder={`${evalItemNameContext.evalItemName}に対する評価を入力してください。`}
-              required
+            <Rating
+              value={Star}
+              onChange={(e) => setStar(e.value)}
+              cancel={false}
             />
             <InputText
               className="review-details-title"
               value={Item2}
               onChange={(e) => setItem2(e.target.value)}
-              placeholder={`${evalItemNameContext.evalItemName}に対する評価を入力してください。`}
+              placeholder={`星に対する理由を入力してください。`}
               required
             />
             <Dropdown

@@ -1,7 +1,7 @@
 $minWidth: 767px; // md:767px lg:991px
 $margin: 0.5rem;
 
-.colleague-feedback-bg {
+.home-page-bg {
   position: relative;
   width: 100vw;
   height: 100vh;
@@ -12,7 +12,7 @@ $margin: 0.5rem;
     margin: $margin + 0.5;
     right: 0;
   }
-  .colleague-feedback-container {
+  .home-page-container {
     position: absolute;
     top: 50%;
     left: 50%;

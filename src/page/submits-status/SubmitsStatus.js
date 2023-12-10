@@ -24,7 +24,7 @@ const SubmitsStatus = (props) => {
         <Button
           label="Back to Home"
           className="submits-status-btn"
-          onClick={() => navigate("/colleague-feedback")}
+          onClick={() => navigate("/home-page")}
         />
       </div>
     </div>
