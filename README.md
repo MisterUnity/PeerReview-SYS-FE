@@ -14,8 +14,7 @@ This project was created to enhance employee recognition activities within the c
 
 ## Installation Guide
 
-1. Clone this repository to your local machine.
-2. In the terminal, run the following command to install the required packages: npm install
+1. In the terminal, run the following command to install the required packages: npm install
 
 ## User Guide
 
@@ -46,8 +45,7 @@ This project was created to enhance employee recognition activities within the c
 
 ## 安裝指南
 
-1. 克隆這個存儲庫到本地機器。
-2. 在終端中運行以下命令來安裝所需套件：npm install
+1. 在終端中運行以下命令來安裝所需套件：npm install
 
 ## 操作指南
 
@@ -66,7 +64,7 @@ This project was created to enhance employee recognition activities within the c
 
 ## 紹介
 
-このプロジェクトは、会社内の従業員の認識活動を活発化させるために作成されたデモンストレーションアプリケーションです。
+このプロジェクトは、会社内の従業員の交流を活発化させるために作成されたデモンストレーションアプリケーションです。
 
 ## 技術スタック
 
@@ -76,18 +74,17 @@ This project was created to enhance employee recognition activities within the c
 
 ## インストールガイド
 
-1. このリポジトリをローカルマシンにクローンします。
-2. ターミナルで、次のコマンドを実行して必要なパッケージをインストールします：npm install
+1. ターミナルで、次のコマンドを実行して必要なパッケージをインストールします：npm install
 
 ## ユーザーガイド
 
 1. ターミナルで次のコマンドを実行してアプリケーションを起動します：npm start
 2. バックエンドプロセスが起動していることを確認します。
 3. Web アプリケーションを開いたら、デモ用の資格情報でログインします：ユーザー名 - Godfrey、パスワード - 123
-4. レビューを行いたい同僚を選択します。
-5. 選択した同僚に対するレビューを提供することを確認します。
-6. 提供したいレビューの種類を選択します。
-7. 詳細なレビューコンテンツを提供します。
-8. レビューを送信します。
+4. 評価を行いたい同僚を選択します。
+5. 選択した同僚を確認します。
+6. 評価したい項目を選択します。
+7. 詳細な評価内容を入力します。
+8. 評価を送信します。
 9. 送信のステータスを確認します。
 10. システムのホームページに戻ります。
