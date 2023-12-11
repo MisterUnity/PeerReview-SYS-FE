@@ -21,7 +21,7 @@ $margin: 0.5rem;
     border-radius: 2%;
     background: linear-gradient(to right, rgb(215, 240, 250), white 95%),
       linear-gradient(to left, rgb(210, 205, 230), white 95%);
-    background-size: 50% 100%; /* 控制每個漸變的大小，此處設置為一半寬度 */
+    background-size: 50% 100%; /* 控制每個漸變的大小，設置為一半寬度 */
     background-position: left, right; /* 控制每個漸變的位置 */
     background-repeat: no-repeat; /* 防止漸變重複 */
     box-shadow: 8px 8px 20px rgb(0, 0, 0);
@@ -30,6 +30,7 @@ $margin: 0.5rem;
       height: 25%;
     }
     .submits-status-MSG {
+      text-align: center;
       font-size: 1.5rem;
       font-weight: bold;
       margin: 1rem;

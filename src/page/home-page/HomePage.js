@@ -18,6 +18,7 @@ import eva_davis_picture from "../../assets/image/profile/staff_headshot/headsho
 import "../../styles/scss/page/_home-page.scss";
 import "../../styles/scss/components/_custom-dialog-internal.scss";
 
+// ★★★ Test-Data ★★★
 const employeePictures = {
   "John Doe": john_doe_picture,
   "Jane Smith": jane_smith_picture,
@@ -54,6 +55,7 @@ const evalItemsDescription = [
   },
   { evalItem: "学びの姿勢", description: "新しい知識とスキルへの学びの姿勢。" },
 ];
+// ★★★ Test-Data ★★★
 
 const HomePage = () => {
   const [clickedData, setClickedData] = useState({});
@@ -64,22 +66,29 @@ const HomePage = () => {
     evalItemsDescription[0]["description"]
   );
   const [isDialogVisible, setIsDialogVisible] = useState(false);
-  const { evalItemNameContext, evaluatedEmployeeNameContext, showToast } =
-    useGlobalStore();
+  const { evalItemNameContext, showToast } = useGlobalStore();
   const navigate = useNavigate();
+
+  // Component Loading Initialization
   useEffect(() => {
     getEmployeeListInit();
   }, []);
 
+  // Dropdown-Effect
   useEffect(() => {
     if (selectedItem) {
+      // 當前被選擇的評價項目。
+      // Currently selected evaluation item.
       evalItemNameContext.setEvalItemName(selectedItem["itemName"]);
 
-      // Switch Description Content Based on Dropdown Selection"
+      // 根據當前被選擇的評價項目，切換描述內容。
+      // Switch description content based on the currently selected evaluation item.
       const matchedDescription = evalItemsDescription.find(
         (evalItems) => evalItems.evalItem === selectedItem["itemName"]
       );
-      setEvalItemsDescription(matchedDescription["description"]);
+      if (matchedDescription) {
+        setEvalItemsDescription(matchedDescription["description"]);
+      }
     }
   }, [selectedItem]);
 
@@ -129,6 +138,8 @@ const HomePage = () => {
         //TODO 顯示dialog 獲取資料失敗，重新嘗試獲取資料的按鈕。
       });
 
+    if (!objArrEmployeeList) return;
+
     // 成功取得資料，但資料庫的員工清單為空。
     // Successfully obtained data, but the employee list in the database is empty.
     if (objArrEmployeeList.length < 1) {
@@ -139,6 +150,7 @@ const HomePage = () => {
       );
       return;
     }
+
     const arrEmployeeNameList = objArrEmployeeList.map((item) => item["name"]);
     await GetSpreadsheet(rangeEvaluationList)
       .then((res) => {
@@ -190,6 +202,30 @@ const HomePage = () => {
             employee["index"] = index;
           });
           setEmployeeData(objArrFinalResult);
+
+          // ＊＊＊ 從表單頁面返回時的處理  Start
+          // ＊＊＊ Handling when returning from the form page.
+          const employeeName = localStorage.getItem("employeeName");
+          if (employeeName) {
+            setClickedData(
+              objArrFinalResult.find((item) => item["name"] === employeeName)
+            );
+          }
+          const evaluationItem = localStorage.getItem("EvaluationItem");
+          if (evaluationItem) {
+            const matchedItem = evalItems.find(
+              (evalItems) => evalItems.itemName === evaluationItem
+            );
+            const matchedDescription = evalItemsDescription.find(
+              (evalItems) => evalItems.evalItem === evaluationItem
+            );
+            setSelectedItem(matchedItem);
+            setEvalItemsDescription(matchedDescription["description"]);
+            setSteps(1);
+            setIsDialogVisible(true);
+          }
+          // ＊＊＊ Handling when returning from the form page.
+          // ＊＊＊ 從表單頁面返回時的處理  End
         } catch (error) {
           showToast("Error", `${error}`, 0);
         }
@@ -200,26 +236,38 @@ const HomePage = () => {
   }
 
   function getStaffInfoHandler(staffIndex) {
-    evaluatedEmployeeNameContext.setEvaluatedEmployeeName(
-      employeeData[staffIndex]["name"]
-    );
+    // 當前被選擇的員工資料。
+    // Currently selected employee data.
     setClickedData(employeeData[staffIndex]);
+
+    // 儲存當前被選擇的員工名稱。
+    // Save the currently selected employee name.
+    localStorage.setItem("employeeName", `${employeeData[staffIndex]["name"]}`);
     setIsDialogVisible(true);
   }
 
   function dialogVisibleHandler() {
     setIsDialogVisible(false);
 
+    // 清除localStorage資料。
+    // Clear localStorage data.
+    localStorage.removeItem("employeeName");
+    localStorage.removeItem("EvaluationItem");
+    // localStorage.removeItem("fromData");
+
+    // 初始化下拉選單和描述。
     // Initialize Dropdown Menu and Evaluation Description
     setSelectedItem(evalItems[0]);
     setEvalItemsDescription(evalItemsDescription[0]["description"]);
 
+    // 初始化Dialog顯示內容。
     // Initialize Dialog Display Content"
     setSteps(0);
   }
 
   function stepsHandler() {
     setSteps((prev) => {
+      // 切換Dialog顯示內容
       // Toggle Dialog Display Content
       // 1：staffConfirmation
       // 0：evalItemConfirmation

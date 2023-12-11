@@ -44,9 +44,17 @@ $margin: 0.5rem;
       width: 80%;
       height: 30%;
     }
-    .review-details-Submits {
-      width: 50%;
+    .review-details-btn-container {
+      width: 100%;
       height: 10%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      .review-details-btn {
+        margin: 1rem;
+        padding: 1rem;
+        width: 30%;
+      }
     }
   }
 }

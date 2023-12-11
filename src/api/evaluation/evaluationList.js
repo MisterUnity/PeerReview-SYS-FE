@@ -35,7 +35,7 @@ export const SetEvaluation = async (data) => {
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       sheetID,
-      range: `'${rangeEvaluationList}'!A${range + 1}:H${range + 1}`,
+      range: `'${rangeEvaluationList}'!A${range + 1}:I${range + 1}`,
       valueInputOpt: 1,
       values: data,
     }),
